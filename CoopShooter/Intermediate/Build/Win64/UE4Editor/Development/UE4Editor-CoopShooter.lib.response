@@ -1,0 +1,16 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UE4Editor-CoopShooter.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"D:\Games\FortNite\UE_4.18\Engine\Intermediate\Build\Win64\UE4Editor\Development\Engine\SharedPCH.Engine.h.obj"
+"D:\projects\CoopShooter\CoopShooter\Intermediate\Build\Win64\UE4Editor\Development\CoopShooter\CoopShooter.cpp.obj"
+"D:\projects\CoopShooter\CoopShooter\Intermediate\Build\Win64\UE4Editor\Development\CoopShooter\CoopShooterGameModeBase.cpp.obj"
+"D:\projects\CoopShooter\CoopShooter\Intermediate\Build\Win64\UE4Editor\Development\CoopShooter\CoopShooter.init.gen.cpp.obj"
+"D:\projects\CoopShooter\CoopShooter\Intermediate\Build\Win64\UE4Editor\Development\CoopShooter\CoopShooterGameModeBase.gen.cpp.obj"
+"D:\Games\FortNite\UE_4.18\Engine\Intermediate\Build\Win64\UE4Editor\Development\CoopShooter\PCLaunch.rc.res"
+"D:\Games\FortNite\UE_4.18\Engine\Intermediate\Build\Win64\UE4Editor\Development\ModuleVersionResource.rc.inl.res"
+/OUT:"D:\projects\CoopShooter\CoopShooter\Intermediate\Build\Win64\UE4Editor\Development\UE4Editor-CoopShooter.lib"
