@@ -1,3 +1,0 @@
-D:\projects\CoopShooter\CoopShooter\Source\CoopShooter\CoopShooter.Build.cs
-D:\projects\CoopShooter\CoopShooter\Source\CoopShooter.Target.cs
-D:\projects\CoopShooter\CoopShooter\Source\CoopShooterEditor.Target.cs
