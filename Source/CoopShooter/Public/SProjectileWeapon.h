@@ -18,6 +18,8 @@ protected:
 
 	virtual void Fire() override;
 
+	void ShakeCamera();
+
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
 	TSubclassOf<AActor> ProjectileClass;
 	

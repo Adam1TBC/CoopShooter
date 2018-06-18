@@ -17,6 +17,21 @@ void ASProjectileWeapon::Fire()
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-		GetWorld()->SpawnActor<AActor>(ProjectileClass, MuzzleLocation, EyeRotation, SpawnParams);
+		AActor* Projectile = GetWorld()->SpawnActor<AActor>(ProjectileClass, MuzzleLocation, EyeRotation, SpawnParams);
+		
+		Projectile->SetOwner(MyOwner);
+
+		ShakeCamera();
+	}
+}
+
+void ASProjectileWeapon::ShakeCamera()
+{
+	APawn* MyOwner = Cast<APawn>(GetOwner());
+	if (MyOwner) {
+		APlayerController* PC = Cast<APlayerController>(MyOwner->GetController());
+		if (PC) {
+			PC->ClientPlayCameraShake(FireCameraShake);
+		}
 	}
 }
