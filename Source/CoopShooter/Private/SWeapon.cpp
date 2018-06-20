@@ -55,7 +55,7 @@ void ASWeapon::Fire()
 		FHitResult Hit;
 
 		// If we've hit something
-		if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, ECC_Visibility, QueryParams)) {
+		if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, COLLISION_WEAPON, QueryParams)) {
 
 			AActor* HitActor = Hit.GetActor();
 
