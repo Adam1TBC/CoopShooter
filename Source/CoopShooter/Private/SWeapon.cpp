@@ -9,6 +9,8 @@
 #include "Particles/ParticleSystemComponent.h"
 #include "CoopShooter.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
+#include "TimerManager.h"
+#include "SCharacter.h"
 
 static int32 DebugWeaponDrawing = 0;
 FAutoConsoleVariableRef CVARDebugWeaponDrawing(
@@ -28,6 +30,20 @@ ASWeapon::ASWeapon()
 	TracerTargetName = "BeamEnd";
 
 	BaseDamage = 20.0f;
+	RateOfFire = 600;
+	
+	DefaultBullets = 30;
+	TimeOfReload = 3.0f;
+}
+
+void ASWeapon::BeginPlay()
+{
+	Super::BeginPlay();
+
+	TimeBetweenShots = 60 / RateOfFire;
+	bIsReload = false;
+
+	Bullets = DefaultBullets;
 }
 
 void ASWeapon::Fire()
@@ -35,7 +51,9 @@ void ASWeapon::Fire()
 
 	AActor* MyOwner = GetOwner();
 
-	if (MyOwner) {
+	if (MyOwner && Bullets > 0) {
+
+		Bullets -= 1;
 
 		FVector EyeLocation;
 		FRotator EyeRotation;
@@ -95,7 +113,41 @@ void ASWeapon::Fire()
 		}
 
 		PlayFireEffects(TracerEndPoint);
+		
+		LastFireTime = GetWorld()->TimeSeconds;
 	}
+	else if (!bIsReload) {
+		StartReload();
+	}
+}
+
+void ASWeapon::StartFire()
+{
+	// FMath::Max for the helping if this formula'll get a negative return
+	float FirstDelay = FMath::Max(LastFireTime + TimeBetweenShots - GetWorld()->TimeSeconds, 0.0f);
+
+	GetWorldTimerManager().SetTimer(TimerHandle_TimeBetweenShots, this, &ASWeapon::Fire, TimeBetweenShots, true, FirstDelay);
+}
+
+void ASWeapon::StopFire()
+{
+	GetWorldTimerManager().ClearTimer(TimerHandle_TimeBetweenShots);
+}
+
+void ASWeapon::StartReload()
+{
+	if (TimeOfReload > 0) {
+		bIsReload = true;
+		
+		GetWorldTimerManager().SetTimer(TimerHandle_TimeOfReload, this, &ASWeapon::StopReload, TimeOfReload);
+	}
+}
+
+void ASWeapon::StopReload()
+{
+	bIsReload = false;
+
+	Bullets = DefaultBullets;
 }
 
 void ASWeapon::PlayFireEffects(FVector TracerEndPoint)
