@@ -30,6 +30,9 @@ public:
 	void StartReload();
 	void StopReload();
 
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsReload;
+
 protected:
 
 	virtual void BeginPlay() override;
@@ -79,7 +82,6 @@ protected:
 	int Bullets;
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	float TimeOfReload;
-	bool bIsReload;
 	
 
 	FTimerHandle TimerHandle_TimeBetweenShots;

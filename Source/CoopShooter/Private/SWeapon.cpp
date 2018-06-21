@@ -139,6 +139,11 @@ void ASWeapon::StartReload()
 	if (TimeOfReload > 0) {
 		bIsReload = true;
 		
+		ASCharacter* Owner = Cast<ASCharacter>(GetOwner());
+		if (Owner) {
+			Owner->OnStartReload();
+		}
+
 		GetWorldTimerManager().SetTimer(TimerHandle_TimeOfReload, this, &ASWeapon::StopReload, TimeOfReload);
 	}
 }
@@ -146,6 +151,11 @@ void ASWeapon::StartReload()
 void ASWeapon::StopReload()
 {
 	bIsReload = false;
+
+	ASCharacter* Owner = Cast<ASCharacter>(GetOwner());
+	if (Owner) {
+		Owner->OnStopReload();
+	}
 
 	Bullets = DefaultBullets;
 }
