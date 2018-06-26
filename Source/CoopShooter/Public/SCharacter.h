@@ -55,6 +55,7 @@ protected:
 
 	float DefaultFOV;
 
+	UPROPERTY(Replicated)
 	ASWeapon* CurrentWeapon;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Player")

@@ -34,6 +34,8 @@ ASWeapon::ASWeapon()
 	
 	DefaultBullets = 30;
 	TimeOfReload = 3.0f;
+
+	SetReplicates(true);
 }
 
 void ASWeapon::BeginPlay()
