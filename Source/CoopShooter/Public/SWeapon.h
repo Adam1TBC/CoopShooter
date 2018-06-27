@@ -11,6 +11,21 @@ class UDamageType;
 class UParticleSystem;
 class UCameraShake;
 
+// Infromation about a hitscan weapon trace
+USTRUCT()
+struct FHitScanTrace
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY()
+	TEnumAsByte<EPhysicalSurface> SurfaceType;
+
+	UPROPERTY()
+	FVector_NetQuantize TraceTo;
+};
+
 UCLASS()
 class COOPSHOOTER_API ASWeapon : public AActor
 {
@@ -21,6 +36,9 @@ public:
 	ASWeapon();
 	
 	virtual void Fire();
+
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerFire();
 
 	//Automatic fire
 	void StartFire();
@@ -41,6 +59,8 @@ protected:
 	USkeletalMeshComponent* MeshComp;
 
 	virtual void PlayFireEffects(FVector TracerEndPoint);
+	
+	virtual void PlayImpactEfffects(EPhysicalSurface SurfaceType, FVector ImpactPoint);
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Weapon")
 	TSubclassOf<UDamageType> DamageType;
@@ -86,4 +106,10 @@ protected:
 
 	FTimerHandle TimerHandle_TimeBetweenShots;
 	FTimerHandle TimerHandle_TimeOfReload;
+
+	UPROPERTY(ReplicatedUsing=OnRep_HitScanTrace)
+	FHitScanTrace HitScanTrace;
+
+	UFUNCTION()
+	void OnRep_HitScanTrace();
 };
