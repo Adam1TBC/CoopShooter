@@ -2,10 +2,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "SProjectileWeapon.h"
+#include "Net/UnrealNetwork.h"
 
 
 void ASProjectileWeapon::Fire()
 {
+	if (Role < ROLE_Authority) {
+		ServerFire();
+		return;
+	}
+
 	AActor* MyOwner = GetOwner();
 	if (MyOwner && ProjectileClass) {
 		FVector EyeLocation;
@@ -18,7 +24,15 @@ void ASProjectileWeapon::Fire()
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 		AActor* Projectile = GetWorld()->SpawnActor<AActor>(ProjectileClass, MuzzleLocation, EyeRotation, SpawnParams);
-
-		Projectile->SetOwner(MyOwner);
+		if (Projectile) {
+			Projectile->SetOwner(MyOwner);
+		}
 	}
+}
+
+void ASProjectileWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ASProjectileWeapon, Projectile);
 }

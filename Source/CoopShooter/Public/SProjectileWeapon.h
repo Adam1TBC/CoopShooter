@@ -19,6 +19,9 @@ protected:
 	virtual void Fire() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile")
-	TSubclassOf<AActor> ProjectileClass;	
+	TSubclassOf<AActor> ProjectileClass;
+
+	UPROPERTY(Replicated)
+	AActor* Projectile;
 	
 };
