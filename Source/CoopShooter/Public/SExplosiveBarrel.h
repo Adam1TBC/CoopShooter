@@ -47,9 +47,11 @@ protected:
 	UFUNCTION()
 	void OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatorBy, AActor* DamageCauser);
 
-	UPROPERTY(BlueprintReadOnly, Category = "Actor")
+	UPROPERTY(BlueprintReadOnly, Category = "Actor", ReplicatedUsing=OnRep_Died)
 	bool bDied;
 
+	UFUNCTION()
+	void OnRep_Died();
 
 public:	
 
