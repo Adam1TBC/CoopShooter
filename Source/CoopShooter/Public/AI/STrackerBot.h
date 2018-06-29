@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "STrackerBot.generated.h"
 
+class USHealthComponent;
+
 UCLASS()
 class COOPSHOOTER_API ASTrackerBot : public APawn
 {
@@ -21,6 +23,12 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
 	UStaticMeshComponent* MeshComp;
+
+	UPROPERTY()
+	USHealthComponent* HealthComp;
+
+	UFUNCTION()
+	void HandleTakeDamage(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatorBy, AActor* DamageCauser);
 
 	FVector GetNextPathPoint();
 

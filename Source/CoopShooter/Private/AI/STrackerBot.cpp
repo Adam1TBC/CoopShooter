@@ -7,6 +7,7 @@
 #include "AI/Navigation/NavigationSystem.h"
 #include "AI/Navigation/NavigationPath.h"
 #include "DrawDebugHelpers.h"
+#include "SHealthComponent.h"
 
 
 // Sets default values
@@ -19,6 +20,8 @@ ASTrackerBot::ASTrackerBot()
 	MeshComp->SetSimulatePhysics(true);
 	MeshComp->SetCanEverAffectNavigation(false);
 	RootComponent = MeshComp;
+	
+	HealthComp = CreateDefaultSubobject<USHealthComponent>(TEXT("HealthComp"));
 
 	bUseVelocityChange = false;
 	MovementForce = 1000;
@@ -32,7 +35,14 @@ void ASTrackerBot::BeginPlay()
 
 	// Initial move-to
 	FVector NextPathPoint = GetNextPathPoint();
+
+	HealthComp->OnHealthChanged.AddDynamic(this, &ASTrackerBot::HandleTakeDamage);
 	
+}
+
+void ASTrackerBot::HandleTakeDamage(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatorBy, AActor* DamageCauser)
+{
+	UE_LOG(LogTemp, Log, TEXT("Health %s of %s"), *FString::SanitizeFloat(Health), *GetName());
 }
 
 FVector ASTrackerBot::GetNextPathPoint()
