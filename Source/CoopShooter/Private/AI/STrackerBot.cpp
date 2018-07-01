@@ -2,12 +2,15 @@
 
 #include "STrackerBot.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
 #include "AI/Navigation/NavigationSystem.h"
 #include "AI/Navigation/NavigationPath.h"
 #include "DrawDebugHelpers.h"
 #include "SHealthComponent.h"
+#include "SCharacter.h"
+#include "TimerManager.h"
 
 
 // Sets default values
@@ -22,6 +25,13 @@ ASTrackerBot::ASTrackerBot()
 	RootComponent = MeshComp;
 	
 	HealthComp = CreateDefaultSubobject<USHealthComponent>(TEXT("HealthComp"));
+
+	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
+	SphereComp->SetSphereRadius(200);
+	SphereComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	SphereComp->SetCollisionResponseToAllChannels(ECR_Ignore);
+	SphereComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+	SphereComp->SetupAttachment(RootComponent);
 
 	bUseVelocityChange = false;
 	MovementForce = 1000;
@@ -40,7 +50,19 @@ void ASTrackerBot::BeginPlay()
 	FVector NextPathPoint = GetNextPathPoint();
 
 	HealthComp->OnHealthChanged.AddDynamic(this, &ASTrackerBot::HandleTakeDamage);
-	
+}
+
+void ASTrackerBot::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	if (!bStartedSelfDestruction) {
+		ASCharacter* PlayerPawn = Cast<ASCharacter>(OtherActor);
+
+		if (PlayerPawn) {
+			GetWorldTimerManager().SetTimer(TimerHandle_SelfDamage, this, &ASTrackerBot::DamageSelf, 0.5f, true, 0.0f);
+
+			bStartedSelfDestruction = true;
+		}
+	}
 }
 
 void ASTrackerBot::HandleTakeDamage(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatorBy, AActor* DamageCauser)
@@ -95,6 +117,11 @@ void ASTrackerBot::SelfDestruct()
 	Destroy();
 }
 
+void ASTrackerBot::DamageSelf()
+{
+	UGameplayStatics::ApplyDamage(this, 20, GetInstigatorController(), this, nullptr);
+}
+
 // Called every frame
 void ASTrackerBot::Tick(float DeltaTime)
 {
@@ -106,7 +133,7 @@ void ASTrackerBot::Tick(float DeltaTime)
 	if (DistanceToTarget <= RequiredDistanceToTarget) {
 		NextPathPoint = GetNextPathPoint();
 
-		DrawDebugString(GetWorld(), GetActorLocation(), "Target Reached!");
+		DrawDebugString(GetWorld(), GetActorLocation(), "Target Reached!", nullptr, FColor::White, 2.0f);
 	} else {
 		// Moving to the target
 		FVector ForceDirection = NextPathPoint - GetActorLocation();
