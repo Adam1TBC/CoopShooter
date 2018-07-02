@@ -4,6 +4,7 @@
 #include "TimerManager.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/World.h"
+#include "Net/UnrealNetwork.h"
 
 
 // Sets default values
@@ -20,6 +21,10 @@ ASPowerupActor::ASPowerupActor()
 
 	MinZMoving = 80;
 	MaxZMoving = 120;
+
+	bIsPowerupActive = false;
+
+	SetReplicates(true);
 
 }
 
@@ -38,9 +43,19 @@ void ASPowerupActor::OnTickPowerup()
 
 	if (TicksProcessed >= TotalNumberOfTicks) {
 		OnExpired();
+		Destroy();
+
+		bIsPowerupActive = false;
+		OnRep_PowerupActive();
 
 		GetWorldTimerManager().ClearTimer(TimerHandle_PowerupTick);
 	}
+}
+
+void ASPowerupActor::OnRep_PowerupActive()
+{
+	OnPowerupStateChanged(bIsPowerupActive);
+	MeshComp->SetVisibility(!bIsPowerupActive, true);
 }
 
 void ASPowerupActor::Tick(float DeltaSeconds)
@@ -57,9 +72,12 @@ void ASPowerupActor::Tick(float DeltaSeconds)
 	MeshComp->SetWorldLocation(MeshLocation);
 }
 
-void ASPowerupActor::ActivatePowerup()
+void ASPowerupActor::ActivatePowerup(AActor* ActiveFor)
 {
-	OnActivated();
+	OnActivated(ActiveFor);
+
+	bIsPowerupActive = true;
+	OnRep_PowerupActive();
 
 	if (PowerupInterval > 0.0f) {
 		GetWorldTimerManager().SetTimer(TimerHandle_PowerupTick, this, &ASPowerupActor::OnTickPowerup, PowerupInterval, true);
@@ -67,4 +85,11 @@ void ASPowerupActor::ActivatePowerup()
 	else {
 		OnTickPowerup();
 	}
+}
+
+void ASPowerupActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ASPowerupActor, bIsPowerupActive);
 }

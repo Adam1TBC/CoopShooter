@@ -33,7 +33,7 @@ protected:
 
 	ASPowerupActor* PowerupInstance;
 
-	UPROPERTY(EditDefaultsOnly, Category = "PuckupActor")
+	UPROPERTY(EditInstanceOnly, Category = "PuckupActor")
 	float CoolDownDuration;
 
 	FTimerHandle TimerHandle_RespawnTimer;
