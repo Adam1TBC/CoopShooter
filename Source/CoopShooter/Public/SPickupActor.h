@@ -41,6 +41,5 @@ protected:
 	void RespawnPowerup();
 
 public:	
-	
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 };
