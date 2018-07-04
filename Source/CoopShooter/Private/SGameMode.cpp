@@ -5,13 +5,14 @@
 #include "Engine/World.h"
 #include "SHealthComponent.h"
 #include "SGameState.h"
-
+#include "SPlayerState.h"
 
 ASGameMode::ASGameMode()
 {
 	TimeBetweenWaves = 2.0f;
 
 	GameStateClass = ASGameMode::StaticClass();
+	PlayerStateClass = ASPlayerState::StaticClass();
 
 	// Set this class to tick every on second, not every frame
 	PrimaryActorTick.bCanEverTick = true;
