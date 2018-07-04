@@ -40,6 +40,9 @@ protected:
 		AActor* DamageCauser);
 
 public:
+
+	float GetHealth() const;
+
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnHealthChangedSignature OnHealthChanged;
 

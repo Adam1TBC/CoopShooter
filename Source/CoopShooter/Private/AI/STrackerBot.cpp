@@ -22,11 +22,12 @@ ASTrackerBot::ASTrackerBot()
 	PrimaryActorTick.bCanEverTick = true;
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComp"));
-	MeshComp->SetSimulatePhysics(true);
 	MeshComp->SetCanEverAffectNavigation(false);
+	MeshComp->SetSimulatePhysics(true);
 	RootComponent = MeshComp;
 	
 	HealthComp = CreateDefaultSubobject<USHealthComponent>(TEXT("HealthComp"));
+	HealthComp->OnHealthChanged.AddDynamic(this, &ASTrackerBot::HandleTakeDamage);
 
 	SphereComp = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComp"));
 	SphereComp->SetSphereRadius(200);
@@ -51,10 +52,9 @@ void ASTrackerBot::BeginPlay()
 
 	if (Role == ROLE_Authority) {
 		// Initial move-to
-		FVector NextPathPoint = GetNextPathPoint();
+		NextPathPoint = GetNextPathPoint();
 	}
 
-	HealthComp->OnHealthChanged.AddDynamic(this, &ASTrackerBot::HandleTakeDamage);
 }
 
 void ASTrackerBot::NotifyActorBeginOverlap(AActor* OtherActor)
