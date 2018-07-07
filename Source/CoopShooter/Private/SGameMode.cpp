@@ -124,6 +124,7 @@ void ASGameMode::RespawnDeadPlayers()
 		if (PC && PC->GetPawn() == nullptr) {
 			RestartPlayer(PC);
 		}
+	}
 }
 
 void ASGameMode::StartPlay() 
