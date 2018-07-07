@@ -55,6 +55,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Powerups")
 	float MaxZMoving;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Mesh")
+	FVector DefaultMeshLocation;
+
 public:	
 
 	virtual void Tick(float DeltaSeconds) override;

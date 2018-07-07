@@ -33,6 +33,7 @@ void ASPowerupActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	DefaultMeshLocation = MeshComp->GetComponentLocation();
 }
 
 void ASPowerupActor::OnTickPowerup()
@@ -67,7 +68,7 @@ void ASPowerupActor::Tick(float DeltaSeconds)
 	alpha /= 2.0f;
 
 	FVector MeshLocation = MeshComp->GetComponentLocation();
-	MeshLocation.Z = FMath::Lerp(MinZMoving, MaxZMoving, alpha);
+	MeshLocation.Z = FMath::Lerp(MinZMoving + DefaultMeshLocation.Z, MaxZMoving + DefaultMeshLocation.Z, alpha);
 
 	MeshComp->SetWorldLocation(MeshLocation);
 }
