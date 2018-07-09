@@ -100,9 +100,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	int DefaultBullets;
 	int Bullets;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	float TimeOfReload;
-	
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon", meta = (ClampMin = 0.0f))
+	float BulletSpread;
 
 	FTimerHandle TimerHandle_TimeBetweenShots;
 	FTimerHandle TimerHandle_TimeOfReload;
