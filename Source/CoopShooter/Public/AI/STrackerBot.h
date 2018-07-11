@@ -38,6 +38,8 @@ protected:
 
 	FVector GetNextPathPoint();
 
+	void RefreshPath();
+
 	// Next navigation point
 	FVector NextPathPoint;
 
@@ -79,6 +81,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "TrackerBot")
 	USoundCue* ExplodeSound;
+
+	FTimerHandle TimerHandle_RefreshPath;
 
 public:	
 	// Called every frame

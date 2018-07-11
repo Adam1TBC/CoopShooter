@@ -74,7 +74,7 @@ void ASGameMode::CheckWaveState()
 
 	if (!bIsAnyBotAlive) {
 		SetWaveState(EWaveState::WaveComplete);
-
+		
 		PrepareForNextWave();
 	}
 }
