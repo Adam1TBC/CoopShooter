@@ -19,10 +19,10 @@ class COOPSHOOTER_API ASCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ASCharacter();
+	virtual void BeginPlay() override;
 
 protected:
 	// Called when the game starts or when  spawned
-	virtual void BeginPlay() override;
 
 	//Movement
 	void MoveForward(float Value);
@@ -91,6 +91,12 @@ public:
 	void OnStartReload();
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnStopReload();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void DrawStartWidgets();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void DeleteStartWidgets();
 
 	
 };

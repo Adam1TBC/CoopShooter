@@ -4,6 +4,7 @@
 #include "TimerManager.h"
 #include "Engine/World.h"
 #include "SHealthComponent.h"
+#include "SCharacter.h"
 #include "SGameState.h"
 #include "SPlayerState.h"
 
@@ -123,6 +124,10 @@ void ASGameMode::RespawnDeadPlayers()
 		APlayerController* PC = It->Get();
 		if (PC && PC->GetPawn() == nullptr) {
 			RestartPlayer(PC);
+			ASCharacter* AS = Cast<ASCharacter>(PC->GetPawn());
+			if (AS) {
+				AS->DrawStartWidgets();
+			}
 		}
 	}
 }

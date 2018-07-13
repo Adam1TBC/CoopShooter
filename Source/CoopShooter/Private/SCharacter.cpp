@@ -45,8 +45,11 @@ void ASCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	DrawStartWidgets();
+
 	DefaultFOV = CameraComp->FieldOfView;
 	HealthComp->OnHealthChanged.AddDynamic(this, &ASCharacter::OnHealthChanged);
+	
 	
 	if (Role == ROLE_Authority) {
 		//Spawn a default weapon
@@ -112,6 +115,8 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 		// Player is dead
 		bDied = true;
 
+		DeleteStartWidgets();
+
 		GetMovementComponent()->StopMovementImmediately();
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
@@ -119,7 +124,7 @@ void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Hea
 		DetachFromControllerPendingDestroy();
 		
 		//Life time before being destroyed
-		SetLifeSpan(10.0f);
+		SetLifeSpan(1.0f);
 	}
 }
 
