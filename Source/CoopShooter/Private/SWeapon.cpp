@@ -36,6 +36,7 @@ ASWeapon::ASWeapon()
 	
 	DefaultBullets = 30;
 	TimeOfReload = 3.0f;
+	NumberOfShoots = 0;
 
 	SetReplicates(true);
 	NetUpdateFrequency = 80.0f;
@@ -62,6 +63,8 @@ void ASWeapon::Fire()
 
 	if (MyOwner && Bullets > 0) {
 
+		GetWorldTimerManager().ClearTimer(TimerHandle_ShootsReset);
+
 		Bullets -= 1;
 
 		FVector EyeLocation;
@@ -69,9 +72,12 @@ void ASWeapon::Fire()
 		MyOwner->GetActorEyesViewPoint(EyeLocation, EyeRotation);
 
 		FVector ShotDirection = EyeRotation.Vector();
+		if (NumberOfShoots > 1) {
+			float HalfRad = FMath::DegreesToRadians(BulletSpread);
+			ShotDirection = FMath::VRandCone(ShotDirection, HalfRad, HalfRad);
+		}
 
-		float HalfRad = FMath::DegreesToRadians(BulletSpread);
-		ShotDirection = FMath::VRandCone(ShotDirection, HalfRad, HalfRad);
+		NumberOfShoots++;
 
 		FVector TraceEnd = EyeLocation + (ShotDirection * 10000); // Like a straight light but trace
 
@@ -120,6 +126,8 @@ void ASWeapon::Fire()
 		}
 		
 		LastFireTime = GetWorld()->TimeSeconds;
+
+		GetWorldTimerManager().SetTimer(TimerHandle_ShootsReset, this, &ASWeapon::ShootsReset, ShootsResetInterval);
 	}
 	else if (!bIsReload) {
 		StartReload();
@@ -231,6 +239,11 @@ void ASWeapon::OnRep_HitScanTrace()
 	// Replicating FX on the all others machines
 	PlayFireEffects(HitScanTrace.TraceTo);
 	PlayImpactEfffects(HitScanTrace.SurfaceType, HitScanTrace.TraceTo);
+}
+
+void ASWeapon::ShootsReset()
+{
+	NumberOfShoots = 0;
 }
 
 void ASWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

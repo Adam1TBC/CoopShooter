@@ -107,12 +107,21 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon", meta = (ClampMin = 0.0f))
 	float BulletSpread;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	float ShootsResetInterval;
+
+	// How many shoots were shoot by 1-3 sec
+	int32 NumberOfShoots;
+
 	FTimerHandle TimerHandle_TimeBetweenShots;
 	FTimerHandle TimerHandle_TimeOfReload;
+	FTimerHandle TimerHandle_ShootsReset;
 
 	UPROPERTY(ReplicatedUsing=OnRep_HitScanTrace)
 	FHitScanTrace HitScanTrace;
 
 	UFUNCTION()
 	void OnRep_HitScanTrace();
+
+	void ShootsReset();
 };
