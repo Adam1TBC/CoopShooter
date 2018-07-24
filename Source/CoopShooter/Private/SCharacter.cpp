@@ -9,6 +9,7 @@
 #include "SHealthComponent.h"
 #include "SWeapon.h"
 #include "Net/UnrealNetwork.h"
+#include "TimerManager.h"
 
 // Sets default values
 ASCharacter::ASCharacter()
@@ -112,21 +113,21 @@ void ASCharacter::StopFire()
 void ASCharacter::OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatorBy, AActor* DamageCauser)
 {
 	if (Health <= 0.0f && !bDied) {
+		
 		// Player is dead
 		bDied = true;
-
-		DeleteStartWidgets();
 
 		GetMovementComponent()->StopMovementImmediately();
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 		//PrepareForDestroy
 		DetachFromControllerPendingDestroy();
-		
+
 		//Life time before being destroyed
 		SetLifeSpan(1.0f);
 	}
 }
+
 
 // Called every frame
 void ASCharacter::Tick(float DeltaTime)

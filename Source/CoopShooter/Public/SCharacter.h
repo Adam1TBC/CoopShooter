@@ -66,7 +66,10 @@ protected:
 
 	UFUNCTION()
 	void OnHealthChanged(USHealthComponent* OwningHealthComp, float Health, float HealthDelta, const class UDamageType* DamageType, class AController* InstigatorBy, AActor* DamageCauser);
-	
+
+	FTimerHandle TimerHandle_PrepareForDestroy;
+
+
 	// Pawn died 
 	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Player")
 	bool bDied;
